@@ -1,5 +1,28 @@
 .App {
-  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  background-image: linear-gradient(60deg, rgb(58,128,221), rgb(62,183,223));
+  padding: 20px;
+}
+
+.todo-btn{
+  /* background-color: rgb(53,158,201); */
+  background-color: rgba(0,0,0,0.2);
+  margin-left: 15px;
+  margin-bottom: 15px;
+  border:none;
+  color: #ffffff;
+}
+
+*{
+    /* animation: fade-in 0.2s ease-in-out; */
+  box-sizing: border-box;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  line-height: 1.5;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
 }
 
 .App-logo {
