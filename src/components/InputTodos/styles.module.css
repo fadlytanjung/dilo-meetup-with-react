@@ -1,0 +1,38 @@
+.new-todo{
+  width:100%;
+}
+
+.button-new{
+  width: 100%;
+  cursor: pointer;
+  padding:5px;
+  color: #172b4d;
+}
+
+.input-todos{
+  border: none;
+  box-shadow: none;
+  width: 100%;
+  padding:10px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  resize: none;
+  min-height: 54px;
+}
+
+.input-todos:focus{
+  outline:0;
+}
+
+.close{
+  padding:10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.close:hover{
+  background-color: rgba(9,30,66,.08);
+}
+
+.button-new:hover{
+  background-color: rgba(9,30,66,.08);
+}

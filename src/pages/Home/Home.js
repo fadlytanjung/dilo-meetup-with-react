@@ -1,48 +1,93 @@
 import React, { Component } from 'react';
 import styles from './styles.module.css';
 import ListItem from '../../components/ListItem';
+import InputTodos from '../../components/InputTodos';
 
 class Home extends Component { 
 
   constructor(props){
     super(props);
     this.state = {
-      isOpen: false,
+      isOpen: [false,false,false],
+      value: {},
       data : [
         {
+          id:1,
           name: 'Todos 1',
           dropdown: false,
           status: 'todo',
         },
         {
+          id:2,
           name: 'Todos 2',
           dropdown: false,
           status: 'todo',
         }
-      ]
+      ],
     }
+    this._highValue = this._highValue.bind(this);
   }
 
-  _handleOpen(bool){
-    this.setState({ isOpen: bool });
+  _highValue(obj){
+    return obj.reduce((a, b) => obj[a] > obj[b] ? a : b);
   }
 
-  _handleOpenDropdown(dropdown,idx){
-    this.setState( prevState=>{ 
-      prevState.data[idx].dropdown = !dropdown
+  _handleOpen(bool,idx){
+    this.setState(
+      prevState => {
+        prevState.isOpen[idx] = bool
+        return {
+          ...prevState,
+        };
+      }
+    );
+  }
+
+  _handleOpenDropdown(dropdown,id){
+    this.setState( prevState=>{
+      const newData = prevState.data.filter(el => el.id === id);
+      const index = prevState.data.findIndex(el => el.id === id);
+      
+      prevState.data[index] = {...newData[0], dropdown:!dropdown } 
       return {
         ...prevState,
       };
     });
   }
 
-  _handleSelectDropdown(select,idx){
+  _handleSelectDropdown(select,id){
     this.setState(prevState => {
-      prevState.data[idx].status = select.value
-      prevState.data[idx].dropdown = false
+      const newData = prevState.data.filter(el => el.id === id);
+      const index = prevState.data.findIndex(el => el.id === id);
+
+      prevState.data[index] = { ...newData[0], dropdown: false, status: select.value };
       return {
         ...prevState,
       };
+    });
+  }
+
+  _handleSubmit(type){
+    this.setState({
+      data:[...this.state.data,
+        {
+          id: this._highValue(this.state.data).id+1,
+          name: this.state.value[type],
+          dropdown: false,
+          status:type,
+        }
+      ],
+      value: {
+        ...this.state.value, [type]: ''
+      }
+    });
+  }
+
+  _handleChange(e){
+    this.setState({
+      value: {
+        ...this.state.value, [e.target.name]:e.target.value
+      }
     });
   }
 
@@ -61,117 +106,46 @@ class Home extends Component {
         text: 'Done',
         value: 'done',
       },
+      {
+        text: 'X',
+        value: 'delete',
+      },
     ];
     return(
       <div className="row m-0">
-        <div className="col-sm-4">
-          <div className={styles['wrapper-card']}>
-            <h6>Todo</h6>
-            {
-              data.filter(el=>el.status==='todo').map((item,idx)=>{
-                return (
-                  <ListItem
-                    key={idx}
-                    isOpen={item.dropdown}
-                    handleOpen={()=>this._handleOpenDropdown(item.dropdown,idx)}
-                    handleSelect={(e)=>this._handleSelectDropdown(e,idx)}
-                    text={item.name}
-                    items={status} />
-                )
-              })
-            }
-            <div className={styles['new-todo']}>
-              {!isOpen&&<div className={styles['button-new']} onClick={()=>this._handleOpen(true)}>
-                + Add New
-              </div>}
-              {isOpen &&
-              <>
-                <textarea
-                  className={styles['input-todos']}
-                  name='input'
-                  type='text'
-                  placeholder='Enter Todos'
-                  >    
-                </textarea>
-                <button className="btn btn-success">Add Todos</button>
-                <span className={styles['close']} onClick={() => this._handleOpen(false)}>X</span>
-              </>
-              }
-            </div>
-          </div>
-        </div>
-        <div className="col-sm-4">
-          <div className={styles['wrapper-card']}>
-            <h6>On Progress</h6>
-            {
-              data.filter(el => el.status === 'onprogress').map((item, idx) => {
-                return (
-                  <ListItem
-                    key={idx}
-                    isOpen={item.dropdown}
-                    handleOpen={() => this._handleOpenDropdown(item.dropdown, idx)}
-                    handleSelect={(e) => this._handleSelectDropdown(e, idx)}
-                    text={item.name}
-                    items={status} />
-                )
-              })
-            }
-            <div className={styles['new-todo']}>
-              {!isOpen && <div className={styles['button-new']} onClick={() => this._handleOpen(true)}>
-                + Add New
-              </div>}
-              {isOpen &&
-                <>
-                  <textarea
-                    className={styles['input-todos']}
-                    name='input'
-                    type='text'
-                    placeholder='Enter Todos'
-                  >
-                  </textarea>
-                  <button className="btn btn-success">Add Todos</button>
-                  <span className={styles['close']} onClick={() => this._handleOpen(false)}>X</span>
-                </>
-              }
-            </div>
-          </div>
-        </div>
-        <div className="col-sm-4">
-          <div className={styles['wrapper-card']}>
-            <h6>Done</h6>
-            {
-              data.filter(el => el.status === 'done').map((item, idx) => {
-                return (
-                  <ListItem
-                    key={idx}
-                    isOpen={item.dropdown}
-                    handleOpen={() => this._handleOpenDropdown(item.dropdown, idx)}
-                    handleSelect={(e) => this._handleSelectDropdown(e, idx)}
-                    text={item.name}
-                    items={status} />
-                )
-              })
-            }
-            <div className={styles['new-todo']}>
-              {!isOpen && <div className={styles['button-new']} onClick={() => this._handleOpen(true)}>
-                + Add New
-              </div>}
-              {isOpen &&
-                <>
-                  <textarea
-                    className={styles['input-todos']}
-                    name='input'
-                    type='text'
-                    placeholder='Enter Todos'
-                  >
-                  </textarea>
-                  <button className="btn btn-success">Add Todos</button>
-                  <span className={styles['close']} onClick={() => this._handleOpen(false)}>X</span>
-                </>
-              }
-            </div>
-          </div>
-        </div>
+          {
+            isOpen.map((item,id)=>{
+              
+              return (
+                <div className="col-sm-4" key={id}>
+                  <div className={styles['wrapper-card']}>
+                  <h6>{status[id].text}</h6>
+                  {
+                    data.filter(el => el.status === status[id].value).map((item,idx)=>{
+                      return (
+                        <ListItem
+                          key={idx}
+                          isOpen={item.dropdown}
+                          handleOpen={()=>this._handleOpenDropdown(item.dropdown,item.id)}
+                          handleSelect={(e)=>this._handleSelectDropdown(e,item.id)}
+                          item={item}
+                          items={status} />
+                      );
+                    })
+                  }
+                  <InputTodos 
+                    isOpen={item}
+                    handleOpen={(e) => this._handleOpen(e,id)}
+                    handleSubmit={() => this._handleSubmit(status[id].value)}
+                    name={status[id].value}
+                    value={this.state.value[status[id].value]}
+                    handleChange={(e)=>this._handleChange(e)}
+                    />
+                </div>
+              </div>
+              );
+            })
+          }
       </div>
     );
   }

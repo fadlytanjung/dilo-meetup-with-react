@@ -3,12 +3,11 @@ import styles from './styles.module.css';
 import Dropdown from '../Dropdown';
 
 function ListItem(props) {
-  const { isOpen, handleOpen, handleSelect, items, text } = props;
-
+  const { isOpen, handleOpen, handleSelect, items, item } = props;
   return (
     <div className={styles['list-card']}>
-      <p>
-        {text}
+      <p className={item.status === 'done'? styles['line'] : ''}>
+        {item.name}
       </p>
       <Dropdown
         isOpen={isOpen}
